@@ -25,7 +25,7 @@ class ActionModule(ActionBase):
 		service = self._task.args.get('service', None)
 		
 		result['failed'] = True
-		new_src = name
+		new_src = template
 		
 		if name is None: 
 			result['msg'] = "name is required"
@@ -38,7 +38,7 @@ class ActionModule(ActionBase):
 
 		if service == 'template':
 			try:
-				new_src = self._find_needle('files', name)
+				new_src = self._find_needle('files', template)
             		except AnsibleError as e:
 				result['failed'] = True
 				result['msg'] = to_text(e)
@@ -51,7 +51,7 @@ class ActionModule(ActionBase):
                 new_module_args = self._task.args.copy()
                 new_module_args.update(
                     dict(
-                        name=new_src
+                        template=new_src
                     )
                 )
 		module_return = self._execute_module(module_name='ovh', module_args=new_module_args, task_vars=task_vars)
